@@ -16,6 +16,13 @@ Please see the [blog post that accompanies this repository](http://www.benjack.i
 To build and install `python_cpp_example`, clone or download this repository and then, from within the repository, run:
 
 ```bash
+git submodule update --init --recursive
+```
+
+and then
+
+
+```bash
 python3 ./setup.py install
 ```
 
@@ -23,6 +30,12 @@ or
 
 ```bash
 pip3 install .
+```
+
+In case you're only interested in building/testing things from whitin the same directory, you could run:
+
+```bash
+python3 ./setup.py build
 ```
 
 # Tests
