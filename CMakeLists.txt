@@ -6,7 +6,7 @@ set (CMAKE_CXX_STANDARD 11)
 SET(SOURCE_DIR "src/${PROJECT_NAME}")
 # Tell cmake that headers are in alse in source_dir
 include_directories(${SOURCE_DIR})
-SET(SOURCES "${SOURCE_DIR}/vectors.cpp")
+# SET(SOURCES "${SOURCE_DIR}/vectors.cpp")
 
 SET(TEST_DIR "tests")
 SET(TESTS ${SOURCES}

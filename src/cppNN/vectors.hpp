@@ -3,36 +3,40 @@
 #include <ostream>
 #include <string>
 
-//Generic output
-template<typename T> std::ostream& operator<<(std::ostream& os, const std::vector<T>& v);
-template<typename T> std::string vectorToString(const std::vector<T>& v);
+template<typename T>
+class vec : public std::vector<T>{
+public:
+  using std::vector<T>::vector;
+  vec<T>() : std::vector<T>::vector(){}
+  vec<T>(std::vector<T> v) : std::vector<T>::vector(v){}
 
-//Vector addition
-std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b);
-std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b);
+  //Vector addition
+  vec<T> operator+(const vec<T>& other) const;
+  vec<T>& operator+=(const vec<T>& other);
 
-//Vector subtraction
-std::vector<double> operator-(const std::vector<double>& a, const std::vector<double>& b);
-std::vector<double> operator-=(std::vector<double>& a, const std::vector<double>& b);
+  //Vector subtraction
+  vec<T> operator-(const vec<T>& other) const;
+  vec<T>& operator-=(const vec<T>& other);
 
-//Vector negation
-std::vector<double> operator-(const std::vector<double>& a);
+  //Vector negation
+  vec<T> operator-() const;
 
-//Vector-scalar add/sub: treats d as a vector of <d, d, d, ... d>
-std::vector<double> operator+(const std::vector<double>& a, double d);
-std::vector<double> operator+(double d, const std::vector<double>& a);
-std::vector<double> operator-(const std::vector<double>& a, double d);
-std::vector<double> operator-(double d, const std::vector<double>& a);
+  std::string toString() const;
 
-//Scalar-vector multiplication
-std::vector<double> operator*(double d, std::vector<double> a);
-std::vector<double> operator*(std::vector<double> a, double d);
+  T dot(const vec<T>& other) const; // dot product
+  //T mul(const vec<T>& other) const; // element-wise
 
-//Vector-vector multiplication: Dot Product ( = sum(a_i * b_i) )
-double dotProduct(const std::vector<double>& a, const std::vector<double>& b);
+  //T index(const vec<int>& other) const; //Extract from the first vector the indices indicated in the old vector.
 
-//Vector-vector multiplication: Hadamard Product (c_i = a_i * b_i)
-std::vector<double> hadamardProduct(const std::vector<double>& a, const std::vector<double>& b);
+  //Vector-scalar add/sub: broadcasts d as a vector of <d, d, d, ... d>
+  //vec operator+(double d) const;
+  //friend vec operator+(double d, const vec& a) const;
+  //vec operator-(const vec& a, double d);
+  //vec operator-(double d, const vec& a);
 
-//Extract from the first vector the indices indicated in the old vector.
-template<typename T> std::vector<T> extractIndices(std::vector<T> oldvec, std::vector<size_t> indices);
+  //Scalar-vector multiplication
+  //vec operator*(double d, vec a);
+  //vec operator*(vec a, double d);
+};
+
+#include "vectors.cpp"

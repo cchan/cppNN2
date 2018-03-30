@@ -1,11 +1,29 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
+#include <pybind11/operators.h>
 #include "vectors.hpp"
 
 namespace py = pybind11;
 
-PYBIND11_PLUGIN(cppNN) {
-  py::module m("cppNN", R"doc(
+PYBIND11_MODULE(cppNN, m) {  
+  py::class_<vec<double>>(m, "vector")
+      .def(py::init<const vec<double> &>())
+      .def(py::init<const std::vector<double> &>())
+      .def(py::self + py::self)
+      .def(py::self += py::self)
+      .def(py::self - py::self)
+      .def(py::self -= py::self)
+      .def(- py::self)
+      .def(py::self == py::self)
+      //.def(py::self * py::self)
+      //.def(py::self *= py::self)
+      //.def(double() * py::self)
+      //.def(py::self * double())
+      .def("dot", &vec<double>::dot)
+      .def("__repr__", &vec<double>::toString)
+      ;
+
+  m.doc() = R"doc(
         Python module
         -----------------------
         .. currentmodule:: cppNN
@@ -14,11 +32,9 @@ PYBIND11_PLUGIN(cppNN) {
 
            add
            subtract
-    )doc");
+    )doc";
 
-  m.def("vectorToString", &vectorToString<double>, R"doc(
-        Convert a vector to a string.
-    )doc");
-
-  return m.ptr();
+  //m.def("vectorToString", &vectorToString<double>, R"doc(
+  //      Convert a vector to a string.
+  //  )doc");
 }

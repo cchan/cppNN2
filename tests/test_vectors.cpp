@@ -4,10 +4,10 @@
 
 using namespace std;
 
-vector<double> a = {1,2,3};
-vector<double> b = {5,7,9};
-vector<double> c = {6,9,12};
-vector<double> d = {};
+vec<double> a = {1,2,3};
+vec<double> b = {5,7,9};
+vec<double> c = {6,9,12};
+vec<double> d = {};
 
 TEST_CASE("Addition and subtraction")
 {
@@ -17,6 +17,6 @@ TEST_CASE("Addition and subtraction")
 
 TEST_CASE("Vector to string conversion")
 {
-    REQUIRE(vectorToString(a) == "{1,2,3}");
-    REQUIRE(vectorToString(d) == "{}");
+    REQUIRE(a.toString() == "{1,2,3}");
+    REQUIRE(d.toString() == "{}");
 }

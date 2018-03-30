@@ -1,107 +1,111 @@
-#include "vectors.hpp"
 #include <numeric>
 #include <cassert>
 #include <sstream>
 
-template<typename T> std::ostream& operator<<(std::ostream& os, const std::vector<T>& v){
-	if (v.size() == 0)
+
+template<typename T>
+std::string vec<T>::toString() const{
+  std::stringstream os;
+	if (this->size() == 0)
 		os << "{}";
 	else{
-		os << '{' << v[0];
-		for (size_t i = 1; i < v.size(); i++)
-			os << ',' << v[i];
+		os << '{' << this->operator[](0);
+		for (size_t i = 1; i < this->size(); i++)
+			os << ',' << this->operator[](i);
 		os << '}';
 	}
-	return os;
-}
-template std::ostream& operator<< <>(std::ostream& os, const std::vector<double>& v);
-template<typename T> std::string vectorToString(const std::vector<T>& v){
-  std::stringstream ss;
-  ss << v;
-  return ss.str();
-}
-template std::string vectorToString<>(const std::vector<double>& v);
-
-
-std::vector<double> operator+(const std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(a[i] + b[i]);
-	return c;
-}
-std::vector<double> operator+=(std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	for (size_t i = 0; i < a.size(); i++)a[i] += b[i];
-	return a;
+	return os.str();
 }
 
-std::vector<double> operator-(const std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(a[i] - b[i]);
-	return c;
-}
-std::vector<double> operator-=(std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	for (size_t i = 0; i < a.size(); i++)a[i] -= b[i];
-	return a;
-}
-
-std::vector<double> operator-(const std::vector<double>& a){
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(-a[i]);
+template<typename T>
+vec<T> vec<T>::operator+(const vec<T>& other) const{
+	assert(this->size() == other.size());
+	vec<T>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) + other[i]);
 	return c;
 }
 
-std::vector<double> operator+(double d, const std::vector<double>& a){
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(d + a[i]);
+template<typename T>
+vec<T>& vec<T>::operator+=(const vec<T>& other){
+	assert(this->size() == other.size());
+	for (size_t i = 0; i < this->size(); i++)this->operator[](i) += other[i];
+	return *this;
+}
+
+template<typename T>
+vec<T> vec<T>::operator-(const vec<T>& other) const{
+	assert(this->size() == other.size());
+	vec<T>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) - other[i]);
 	return c;
 }
-std::vector<double> operator+(const std::vector<double>& a, double d){
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(a[i] + d);
-	return c;
+template<typename T>
+vec<T>& vec<T>::operator-=(const vec<T>& other){
+	assert(this->size() == other.size());
+	for (size_t i = 0; i < this->size(); i++)this->operator[](i) -= other[i];
+	return *this;
 }
-std::vector<double> operator-(double d, const std::vector<double>& a){
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(d - a[i]);
-	return c;
-}
-std::vector<double> operator-(const std::vector<double>& a, double d){
-	std::vector<double>c;
-	for (size_t i = 0; i < a.size(); i++)c.push_back(a[i] - d);
+
+template<typename T>
+vec<T> vec<T>::operator-() const{
+	vec<T>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(-this->operator[](i));
 	return c;
 }
 
-std::vector<double> operator*(double d, std::vector<double> a){
-	for (size_t i = 0; i < a.size(); i++)a[i] *= d;
-	return a;
-}
-std::vector<double> operator*(std::vector<double> a, double d){
-	for (size_t i = 0; i < a.size(); i++)a[i] *= d;
-	return a;
+template<typename T>
+T vec<T>::dot(const vec<T>& other) const{
+	assert(this->size() == other.size());
+	return std::inner_product(this->begin(), this->end(), other.begin(), 0.0);
 }
 
-double dotProduct(const std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	return std::inner_product(a.begin(), a.end(), b.begin(), 0.0);
+/*
+vec<T> operator+(double d, const vec<double>& this){
+	vec<double>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(d + this->operator[](i));
+	return c;
 }
-
-std::vector<double> hadamardProduct(const std::vector<double>& a, const std::vector<double>& b){
-	assert(a.size() == b.size());
-	std::vector<double> c;
-	for (size_t i = 0; i < a.size(); i++)
-		c.push_back(a[i] * b[i]);
+vec<T> operator+(const vec<double>& this, double d){
+	vec<double>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) + d);
+	return c;
+}
+vec<T> operator-(double d, const vec<double>& this){
+	vec<double>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(d - this->operator[](i));
+	return c;
+}
+vec<T> operator-(const vec<double>& this, double d){
+	vec<double>c;
+	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) - d);
 	return c;
 }
 
-template<typename T> std::vector<T> extractIndices(std::vector<T> oldvec, std::vector<size_t> indices){
-	std::vector<T> newvec();
-	newvec.reserve(indices.size());
+vec<T> operator*(double d, vec<double> this){
+	for (size_t i = 0; i < this->size(); i++)this->operator[](i) *= d;
+	return this;
+}
+vec<T> operator*(vec<double> this, double d){
+	for (size_t i = 0; i < this->size(); i++)this->operator[](i) *= d;
+	return this;
+}
+
+
+vec<double> hadamardProduct(const vec<double>& this, const vec<T>& other){
+	assert(this->size() == other.size());
+	vec<double> c;
+	for (size_t i = 0; i < this->size(); i++)
+		c.push_back(this->operator[](i) * other[i]);
+	return c;
+}
+
+template<typename T> vec<T> extractIndices(vec<T> oldvec, vec<size_t> indices){
+	vec<T> newvec();
+	newvec.reserve(indices.this->size());
 	for (size_t ind : indices){
-		assert(ind < oldvec.size());
+		assert(ind < oldvec.this->size());
 		newvec.push_back(oldvec[ind]);
 	}
 	return newvec;
 }
+*/
