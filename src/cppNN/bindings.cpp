@@ -1,5 +1,6 @@
 #include <pybind11/pybind11.h>
-#include "math.hpp"
+#include <pybind11/stl.h>
+#include "vectors.hpp"
 
 namespace py = pybind11;
 
@@ -15,16 +16,8 @@ PYBIND11_PLUGIN(cppNN) {
            subtract
     )doc");
 
-  m.def("add", &add, R"doc(
-        Add two numbers
-
-        Some other information about the add function.
-    )doc");
-
-  m.def("subtract", &subtract, R"doc(
-        Subtract two numbers
-
-        Some other information about the subtract function.
+  m.def("vectorToString", &vectorToString<double>, R"doc(
+        Convert a vector to a string.
     )doc");
 
   return m.ptr();
