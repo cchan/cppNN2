@@ -1,1 +1,1 @@
-.. automodule:: python_cpp_example
+.. automodule:: cppNN

@@ -7,6 +7,7 @@ tests/bin
 *.egg-info
 __pycache__
 .eggs
+*.pyc
 
 # VS Code
 .vscode

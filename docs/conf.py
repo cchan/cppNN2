@@ -42,8 +42,8 @@ extensions = [
 
 autosummary_generate = True
 
-breathe_projects = { "python_cpp_example": "_build/doxygenxml/" }
-breathe_default_project = "python_cpp_example"
+breathe_projects = { "cppNN": "_build/doxygenxml/" }
+breathe_default_project = "cppNN"
 breathe_domain_by_extension = {'hpp': 'cpp'}
 
 # Add any paths that contain templates here, relative to this directory.
@@ -59,9 +59,9 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'python_cpp_example'
-copyright = '2017, Benjamin Jack'
-author = 'Benjamin Jack'
+project = 'cppNN'
+copyright = '2018, Clive Chan'
+author = 'Clive Chan'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -113,7 +113,7 @@ html_static_path = ['_static']
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'python_cpp_example_doc'
+htmlhelp_basename = 'cppNN_doc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -140,7 +140,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'python_cpp_example.tex', 'Python/C++ Project Example Documentation',
+    (master_doc, 'cppNN.tex', 'Python/C++ Project Example Documentation',
      'Benjamin Jack', 'manual'),
 ]
 
@@ -150,7 +150,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'python_cpp_example', 'Python/C++ Project Example Documentation',
+    (master_doc, 'cppNN', 'Python/C++ Project Example Documentation',
      [author], 1)
 ]
 
@@ -161,8 +161,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'python_cpp_example', 'Python/C++ Project Example Documentation',
-     author, 'python_cpp_example', 'One line description of project.',
+    (master_doc, 'cppNN', 'Python/C++ Project Example Documentation',
+     author, 'cppNN', 'One line description of project.',
      'Miscellaneous'),
 ]
 

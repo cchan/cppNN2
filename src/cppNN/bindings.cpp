@@ -3,21 +3,21 @@
 
 namespace py = pybind11;
 
-PYBIND11_PLUGIN(python_cpp_example) {
-  py::module m("python_cpp_example", R"doc(
+PYBIND11_PLUGIN(cppNN) {
+  py::module m("cppNN", R"doc(
         Python module
         -----------------------
-        .. currentmodule:: python_cpp_example
+        .. currentmodule:: cppNN
         .. autosummary::
            :toctree: _generate
-           
+
            add
            subtract
     )doc");
 
   m.def("add", &add, R"doc(
         Add two numbers
-        
+
         Some other information about the add function.
     )doc");
 
