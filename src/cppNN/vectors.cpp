@@ -19,98 +19,47 @@ std::string vec<T>::toString() const{
 }
 
 template<typename T>
-vec<T> vec<T>::operator+(const vec<T>& other) const{
+template<typename O, typename R>
+inline vec<R> vec<T>::binOp(const vec<O>& other, std::function<R(T,O)> func) const{
   assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
-  vec<T> result;
+  vec<R> result;
   result.reserve(this->size());
   std::transform(this->begin(), this->end(), other.begin(),
-                 std::back_inserter(result), std::plus<T>());
+                 std::back_inserter(result), func);
   return result;
 }
 
 template<typename T>
-vec<T>& vec<T>::operator+=(const vec<T>& other){
+template<typename O>
+inline vec<T>& vec<T>::binOpAssign(const vec<O>& other, std::function<T(T,O)> func){
   assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
-  for (size_t i = 0; i < this->size(); i++)this->operator[](i) += other[i];
+  std::transform(this->begin(), this->end(), other.begin(),
+                 this->begin(), func);
   return *this;
 }
 
 template<typename T>
-vec<T> vec<T>::operator-(const vec<T>& other) const{
-  assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
-  vec<T>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) - other[i]);
-  return c;
-}
-template<typename T>
-vec<T>& vec<T>::operator-=(const vec<T>& other){
-  assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
-  for (size_t i = 0; i < this->size(); i++)this->operator[](i) -= other[i];
-  return *this;
+template<typename R>
+inline vec<R> vec<T>::unaryOp(std::function<R(T)> func) const{
+  vec<R> result;
+  result.reserve(this->size());
+  std::transform(this->begin(), this->end(),
+                 std::back_inserter(result), func);
+  return result;
 }
 
 template<typename T>
-vec<T> vec<T>::operator-() const{
-  vec<T>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(-this->operator[](i));
-  return c;
+inline vec<T>& vec<T>::unaryOpAssign(std::function<T(T)> func){
+  std::transform(this->begin(), this->end(),
+                 this->begin(), func);
+  return *this;
 }
+
 
 template<typename T>
 T vec<T>::dot(const vec<T>& other) const{
   assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
-  return std::inner_product(this->begin(), this->end(), other.begin(), 0.0);
+  return std::inner_product(this->begin(), this->end(), other.begin(), T());
 }
-
-/*
-vec<T> operator+(double d, const vec<double>& this){
-  vec<double>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(d + this->operator[](i));
-  return c;
-}
-vec<T> operator+(const vec<double>& this, double d){
-  vec<double>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) + d);
-  return c;
-}
-vec<T> operator-(double d, const vec<double>& this){
-  vec<double>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(d - this->operator[](i));
-  return c;
-}
-vec<T> operator-(const vec<double>& this, double d){
-  vec<double>c;
-  for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) - d);
-  return c;
-}
-
-vec<T> operator*(double d, vec<double> this){
-  for (size_t i = 0; i < this->size(); i++)this->operator[](i) *= d;
-  return this;
-}
-vec<T> operator*(vec<double> this, double d){
-  for (size_t i = 0; i < this->size(); i++)this->operator[](i) *= d;
-  return this;
-}
-
-
-vec<double> hadamardProduct(const vec<double>& this, const vec<T>& other){
-  assert(this->size() == other.size());
-  vec<double> c;
-  for (size_t i = 0; i < this->size(); i++)
-    c.push_back(this->operator[](i) * other[i]);
-  return c;
-}
-
-template<typename T> vec<T> extractIndices(vec<T> oldvec, vec<size_t> indices){
-  vec<T> newvec();
-  newvec.reserve(indices.this->size());
-  for (size_t ind : indices){
-    assert(ind < oldvec.this->size());
-    newvec.push_back(oldvec[ind]);
-  }
-  return newvec;
-}
-*/
 
 }

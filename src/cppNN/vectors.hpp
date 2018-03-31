@@ -2,43 +2,53 @@
 #include <vector>
 #include <ostream>
 #include <string>
+#include <algorithm>
+#include <functional>
 
 namespace cppNN{
 
 template<typename T>
 class vec : public std::vector<T>{
+  template<typename O, typename R> inline vec<R> binOp(const vec<O>& other, std::function<R(T,O)> func) const;
+  template<typename O> inline vec<T>& binOpAssign(const vec<O>& other, std::function<T(T,O)> func);
+  template<typename R> inline vec<R> unaryOp(std::function<R(T)> func) const;
+  inline vec<T>& unaryOpAssign(std::function<T(T)> func);
 public:
   using std::vector<T>::vector;
   vec<T>() : std::vector<T>::vector(){}
   vec<T>(std::vector<T> v) : std::vector<T>::vector(v){}
 
-  //Vector addition
-  vec<T> operator+(const vec<T>& other) const;
-  vec<T>& operator+=(const vec<T>& other);
-
-  //Vector subtraction
-  vec<T> operator-(const vec<T>& other) const;
-  vec<T>& operator-=(const vec<T>& other);
-
-  //Vector negation
-  vec<T> operator-() const;
-
   std::string toString() const;
 
-  T dot(const vec<T>& other) const; // dot product
-  //T mul(const vec<T>& other) const; // element-wise
+  // Vector-vector arithmetic
+  template<typename O> vec<T> operator+(const vec<O>& other) const{ return binOp(other, std::function<T(T,O)>(std::plus<T>())); }
+  //template<typename O> vec<T>& operator+=(const vec<O>& other){ return binOpAssign(other, [](T x, O y){return x + y;}); }
+  template<typename O> vec<T> operator-(const vec<O>& other) const{ return binOp(other, std::function<T(T,O)>(std::minus<T>())); }
+  //template<typename O> vec<T>& operator-=(const vec<O>& other){ return binOpAssign(other, [](T x, O y){return x - y;}); }
 
-  //T index(const vec<int>& other) const; //Extract from the first vector the indices indicated in the old vector.
+  // Scalar-vector arithmetic
+  //template<typename O> vec<T> operator+(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x + y;}, d)); }
+  //template<typename O> vec<T>& operator+=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x + y;}, d)); }
+  //template<typename O> vec<T> operator-(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x - y;}, d)); }
+  //template<typename O> vec<T>& operator-=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x - y;}, d)); }
+  //template<typename O> vec<T> operator*(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x * y;}, d)); }
+  //template<typename O> vec<T>& operator*=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x * y;}, d)); }
+  //template<typename O> vec<T> operator/(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x / y;}, d)); }
+  //template<typename O> vec<T>& operator/=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x / y;}, d)); }
 
-  //Vector-scalar add/sub: broadcasts d as a vector of <d, d, d, ... d>
-  //vec operator+(double d) const;
-  //friend vec operator+(double d, const vec& a) const;
-  //vec operator-(const vec& a, double d);
-  //vec operator-(double d, const vec& a);
+  // Vector negation
+  vec<T> operator-() const{ return unaryOp(std::function<T(T)>(std::negate<T>())); }
 
-  //Scalar-vector multiplication
-  //vec operator*(double d, vec a);
-  //vec operator*(vec a, double d);
+  // Dot and element-wise products
+  T dot(const vec<T>& other) const;
+  //template<typename O> vec<T> mul(const vec<O>& other) const{ return binOp(other, std::multiplies<T>()); }
+
+  // Comparison
+  bool operator==(const vec<T>& other) const{ return this->size() == other.size() && std::equal(this->begin(), this->end(), other.begin()); }
+
+  // Indexing
+  //vec<T> at(vec<size_t> indices){ return indices.unaryOp(std::function<T(size_t)>([this](size_t x){return std::vector<T>::at(x);})); }
+  void set(size_t index, T value){ this->at(index) = value; }
 };
 
 }
