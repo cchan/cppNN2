@@ -28,7 +28,7 @@ class MainTest(unittest.TestCase):
         self.assertEqual(c[1], 7)
         with self.assertRaises(IndexError) as context:
           d[0]
-        self.assertEqual(str(context.exception), "vector::_M_range_check: __n (which is 0) >= this->size() (which is 0)")
+        self.assertTrue(str(context.exception).startswith("vector::_M_range_check"))
     def test_indexing(self):
         #self.assertEqual((type(c), type(cppNN.vec([2,2,1]))), 0)
         self.assertEqual(c.idx([0,2,1]), cppNN.vec([5,9,7]))
