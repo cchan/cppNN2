@@ -1,25 +1,24 @@
 #include <numeric>
-#include <cassert>
 #include <sstream>
-
+#include "common.hpp"
 
 template<typename T>
 std::string vec<T>::toString() const{
-  std::stringstream os;
+  std::stringstream ss;
 	if (this->size() == 0)
-		os << "{}";
+		ss << "{}";
 	else{
-		os << '{' << this->operator[](0);
+		ss << '{' << this->operator[](0);
 		for (size_t i = 1; i < this->size(); i++)
-			os << ',' << this->operator[](i);
-		os << '}';
+			ss << ',' << this->operator[](i);
+		ss << '}';
 	}
-	return os.str();
+	return ss.str();
 }
 
 template<typename T>
 vec<T> vec<T>::operator+(const vec<T>& other) const{
-	assert(this->size() == other.size());
+	assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
 	vec<T>c;
 	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) + other[i]);
 	return c;
@@ -27,21 +26,21 @@ vec<T> vec<T>::operator+(const vec<T>& other) const{
 
 template<typename T>
 vec<T>& vec<T>::operator+=(const vec<T>& other){
-	assert(this->size() == other.size());
+	assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
 	for (size_t i = 0; i < this->size(); i++)this->operator[](i) += other[i];
 	return *this;
 }
 
 template<typename T>
 vec<T> vec<T>::operator-(const vec<T>& other) const{
-	assert(this->size() == other.size());
+	assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
 	vec<T>c;
 	for (size_t i = 0; i < this->size(); i++)c.push_back(this->operator[](i) - other[i]);
 	return c;
 }
 template<typename T>
 vec<T>& vec<T>::operator-=(const vec<T>& other){
-	assert(this->size() == other.size());
+	assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
 	for (size_t i = 0; i < this->size(); i++)this->operator[](i) -= other[i];
 	return *this;
 }
@@ -55,7 +54,7 @@ vec<T> vec<T>::operator-() const{
 
 template<typename T>
 T vec<T>::dot(const vec<T>& other) const{
-	assert(this->size() == other.size());
+	assert(this->size() == other.size(), ERR_SIZE_MISMATCH);
 	return std::inner_product(this->begin(), this->end(), other.begin(), 0.0);
 }
 
