@@ -10,15 +10,15 @@ python:
   - "3.6"
   #- "3.6-dev"
   #- "3.7-dev"
-  - "nightly"
+  #- "nightly"
 
 compiler:
   - gcc
-  #- clang
+  - clang
 
 env:
   - CC=gcc
-  #- CC=clang
+  - CC=clang
 
 matrix:
   fast_finish: true
