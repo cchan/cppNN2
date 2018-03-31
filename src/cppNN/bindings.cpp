@@ -6,8 +6,8 @@
 namespace py = pybind11;
 
 PYBIND11_MODULE(cppNN, m) {  
-  py::class_<vec<double>>(m, "vector")
-      .def(py::init<const vec<double> &>())
+  py::class_<cppNN::vec<double>>(m, "vector")
+      .def(py::init<const cppNN::vec<double> &>())
       .def(py::init<const std::vector<double> &>())
       .def(py::self + py::self)
       .def(py::self += py::self)
@@ -19,8 +19,8 @@ PYBIND11_MODULE(cppNN, m) {
       //.def(py::self *= py::self)
       //.def(double() * py::self)
       //.def(py::self * double())
-      .def("dot", &vec<double>::dot)
-      .def("__repr__", &vec<double>::toString)
+      .def("dot", &cppNN::vec<double>::dot)
+      .def("__repr__", &cppNN::vec<double>::toString)
       ;
 
   m.doc() = R"doc(

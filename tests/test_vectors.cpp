@@ -4,10 +4,10 @@
 
 using namespace std;
 
-vec<double> a = {1,2,3};
-vec<double> b = {5,7,9};
-vec<double> c = {6,9,12};
-vec<double> d = {};
+cppNN::vec<double> a = {1,2,3};
+cppNN::vec<double> b = {5,7,9};
+cppNN::vec<double> c = {6,9,12};
+cppNN::vec<double> d = {};
 
 TEST_CASE("Vector to string conversion")
 {

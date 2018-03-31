@@ -3,6 +3,8 @@
 #include <ostream>
 #include <string>
 
+namespace cppNN{
+
 template<typename T>
 class vec : public std::vector<T>{
 public:
@@ -38,5 +40,7 @@ public:
   //vec operator*(double d, vec a);
   //vec operator*(vec a, double d);
 };
+
+}
 
 #include "vectors.cpp"

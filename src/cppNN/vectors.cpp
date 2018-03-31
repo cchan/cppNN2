@@ -2,6 +2,8 @@
 #include <sstream>
 #include "common.hpp"
 
+namespace cppNN{
+
 template<typename T>
 std::string vec<T>::toString() const{
   std::stringstream ss;
@@ -108,3 +110,5 @@ template<typename T> vec<T> extractIndices(vec<T> oldvec, vec<size_t> indices){
 	return newvec;
 }
 */
+
+}
