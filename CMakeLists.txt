@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 2.8.12)
 project(cppNN)
 
-set (CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -Og -DDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE "-Ofast -g0 -MMD")
 
 SET(SOURCE_DIR "src/${PROJECT_NAME}")
 # Tell cmake that headers are in alse in source_dir

@@ -45,6 +45,7 @@ class CMakeBuild(build_ext):
                       '-DPYTHON_EXECUTABLE=' + sys.executable]
 
         cfg = 'Debug' if self.debug else 'Release'
+        print(cfg, "Build Config")
         build_args = ['--config', cfg]
 
         if platform.system() == "Windows":
