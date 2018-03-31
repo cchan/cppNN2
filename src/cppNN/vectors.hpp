@@ -3,20 +3,27 @@
 #include <ostream>
 #include <string>
 #include <algorithm>
+#include <numeric>
 #include <functional>
+#include "common.hpp"
 
 namespace cppNN{
 
 template<typename T>
-class vec : public std::vector<T>{
+class vec{
+public:
+  std::vector<T> data;
+
+  typedef int size_type;
+
   template<typename O, typename R> inline vec<R> binOp(const vec<O>& other, std::function<R(T,O)> func) const;
   template<typename O> inline vec<T>& binOpAssign(const vec<O>& other, std::function<T(T,O)> func);
   template<typename R> inline vec<R> unaryOp(std::function<R(T)> func) const;
   inline vec<T>& unaryOpAssign(std::function<T(T)> func);
-public:
-  using std::vector<T>::vector;
-  vec<T>() : std::vector<T>::vector(){}
-  vec<T>(std::vector<T> v) : std::vector<T>::vector(v){}
+
+  vec<T>() : data(){}
+  vec<T>(std::vector<T> v) : data(v){}
+  vec<T>(std::initializer_list<T> v) : data(v){}
 
   std::string toString() const;
 
@@ -40,15 +47,30 @@ public:
   vec<T> operator-() const{ return unaryOp(std::function<T(T)>(std::negate<T>())); }
 
   // Dot and element-wise products
-  T dot(const vec<T>& other) const;
+  template<typename O> T dot(const vec<O>& other) const{
+    assert(data.size() == other.data.size(), ERR_SIZE_MISMATCH);
+    return std::inner_product(data.begin(), data.end(), other.data.begin(), T());
+  }
   //template<typename O> vec<T> mul(const vec<O>& other) const{ return binOp(other, std::multiplies<T>()); }
 
   // Comparison
-  bool operator==(const vec<T>& other) const{ return this->size() == other.size() && std::equal(this->begin(), this->end(), other.begin()); }
+  template<typename O> bool operator==(const vec<O>& other) const{ return data.size() == other.data.size() && std::equal(data.begin(), data.end(), other.data.begin()); }
 
   // Indexing
-  //vec<T> at(vec<size_t> indices){ return indices.unaryOp(std::function<T(size_t)>([this](size_t x){return std::vector<T>::at(x);})); }
-  void set(size_t index, T value){ this->at(index) = value; }
+  T at(size_type i){ return data.at(i); }
+  vec<T> idx(const std::vector<size_type>& indices) const{
+    return idx(vec<size_type>(indices));
+  }
+  vec<T> idx(const vec<size_type>& indices) const{
+    return indices.unaryOp(
+      std::function<T(size_type)>(
+        [this](size_type x){
+          return data.at(x);
+        }
+      )
+    );
+  }
+  void set(size_type index, T value){ data.at(index) = value; }
 };
 
 }
