@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <numeric>
 #include <functional>
+#include <utility>
 #include "common.hpp"
 
 namespace cppNN{
@@ -27,21 +28,23 @@ public:
 
   std::string toString() const;
 
+  #define OP(T,op,O) (std::function<decltype(std::declval<T>() op std::declval<O>())(T,O)>([](T x, O y){return x op y;}))
+
   // Vector-vector arithmetic
-  template<typename O> vec<T> operator+(const vec<O>& other) const{ return binOp(other, std::function<T(T,O)>(std::plus<T>())); }
-  //template<typename O> vec<T>& operator+=(const vec<O>& other){ return binOpAssign(other, [](T x, O y){return x + y;}); }
-  template<typename O> vec<T> operator-(const vec<O>& other) const{ return binOp(other, std::function<T(T,O)>(std::minus<T>())); }
-  //template<typename O> vec<T>& operator-=(const vec<O>& other){ return binOpAssign(other, [](T x, O y){return x - y;}); }
+  template<typename O> auto operator+(const vec<O>& other) const{ return binOp(other, OP(T,+,O)); }
+  template<typename O> vec<T>& operator+=(const vec<O>& other){ return binOpAssign(other, OP(T,+,O)); }
+  template<typename O> auto operator-(const vec<O>& other) const{ return binOp(other, OP(T,-,O)); }
+  template<typename O> vec<T>& operator-=(const vec<O>& other){ return binOpAssign(other, OP(T,-,O)); }
 
   // Scalar-vector arithmetic
-  //template<typename O> vec<T> operator+(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x + y;}, d)); }
-  //template<typename O> vec<T>& operator+=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x + y;}, d)); }
-  //template<typename O> vec<T> operator-(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x - y;}, d)); }
-  //template<typename O> vec<T>& operator-=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x - y;}, d)); }
-  //template<typename O> vec<T> operator*(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x * y;}, d)); }
-  //template<typename O> vec<T>& operator*=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x * y;}, d)); }
-  //template<typename O> vec<T> operator/(O d) const{ return unaryOp(std::bind1st([](T x, O y){return x / y;}, d)); }
-  //template<typename O> vec<T>& operator/=(O d){ return unaryOpAssign(std::bind1st([](T x, O y){return x / y;}, d)); }
+  template<typename O> auto operator+(O d) const{ return unaryOp(std::bind1st(OP(T,+,O), d)); }
+  template<typename O> vec<T>& operator+=(O d){ return unaryOpAssign(std::bind1st(OP(T,+,O), d)); }
+  template<typename O> auto operator-(O d) const{ return unaryOp(std::bind1st(OP(T,-,O), d)); }
+  template<typename O> vec<T>& operator-=(O d){ return unaryOpAssign(std::bind1st(OP(T,-,O), d)); }
+  template<typename O> auto operator*(O d) const{ return unaryOp(std::bind1st(OP(T,*,O), d)); }
+  template<typename O> vec<T>& operator*=(O d){ return unaryOpAssign(std::bind1st(OP(T,*,O), d)); }
+  template<typename O> auto operator/(O d) const{ return unaryOp(std::bind1st(OP(T,/,O), d)); }
+  template<typename O> vec<T>& operator/=(O d){ return unaryOpAssign(std::bind1st(OP(T,/,O), d)); }
 
   // Vector negation
   vec<T> operator-() const{ return unaryOp(std::function<T(T)>(std::negate<T>())); }
@@ -51,10 +54,13 @@ public:
     assert(data.size() == other.data.size(), ERR_SIZE_MISMATCH);
     return std::inner_product(data.begin(), data.end(), other.data.begin(), T());
   }
-  //template<typename O> vec<T> mul(const vec<O>& other) const{ return binOp(other, std::multiplies<T>()); }
+  template<typename O> auto mul(const vec<O>& other) const{ return binOp(other, OP(T,*,O)); }
 
   // Comparison
-  template<typename O> bool operator==(const vec<O>& other) const{ return data.size() == other.data.size() && std::equal(data.begin(), data.end(), other.data.begin()); }
+  template<typename O> bool operator==(const vec<O>& other) const{
+    return data.size() == other.data.size() &&
+           std::equal(data.begin(), data.end(), other.data.begin());
+  }
 
   // Indexing
   T at(size_type i){ return data.at(i); }
