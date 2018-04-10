@@ -28,7 +28,9 @@ public:
 
   std::string toString() const;
 
-  #define OP(T,op,O) (std::function<decltype(std::declval<T>() op std::declval<O>())(T,O)>([](T x, O y){return x op y;}))
+  #define RESULT(T,op,O) decltype(std::declval<T>() op std::declval<O>())
+  #define OP(T,op,O) (std::function<RESULT(T,op,O)(T,O)>([](T x, O y){return x op y;}))
+  // #define BINOP(op) template<typename O> auto operator##op(const vec<O>& other) const{ return binOp(other, OP(T,op,O)); }
 
   // Vector-vector arithmetic
   template<typename O> auto operator+(const vec<O>& other) const{ return binOp(other, OP(T,+,O)); }
@@ -37,14 +39,14 @@ public:
   template<typename O> vec<T>& operator-=(const vec<O>& other){ return binOpAssign(other, OP(T,-,O)); }
 
   // Scalar-vector arithmetic
-  template<typename O> auto operator+(O d) const{ return unaryOp(std::bind1st(OP(T,+,O), d)); }
-  template<typename O> vec<T>& operator+=(O d){ return unaryOpAssign(std::bind1st(OP(T,+,O), d)); }
-  template<typename O> auto operator-(O d) const{ return unaryOp(std::bind1st(OP(T,-,O), d)); }
-  template<typename O> vec<T>& operator-=(O d){ return unaryOpAssign(std::bind1st(OP(T,-,O), d)); }
-  template<typename O> auto operator*(O d) const{ return unaryOp(std::bind1st(OP(T,*,O), d)); }
-  template<typename O> vec<T>& operator*=(O d){ return unaryOpAssign(std::bind1st(OP(T,*,O), d)); }
-  template<typename O> auto operator/(O d) const{ return unaryOp(std::bind1st(OP(T,/,O), d)); }
-  template<typename O> vec<T>& operator/=(O d){ return unaryOpAssign(std::bind1st(OP(T,/,O), d)); }
+  //template<typename O> friend auto operator+(vec<T> a, O b){ return a.unaryOp(std::bind2nd(OP(T,+,O), b)); }
+  //template<typename O> friend vec<T>& operator+=(vec<T> a, O b){ return a.unaryOpAssign(std::bind2nd(OP(T,+,O), b)); }
+  //template<typename O> auto operator-(O d) const{ return unaryOp(std::bind2nd(OP(T,-,O), d)); }
+  //template<typename O> vec<T>& operator-=(O d){ return unaryOpAssign(std::bind2nd(OP(T,-,O), d)); }
+  //template<typename O> auto operator*(O d) const{ return unaryOp(std::bind2nd(OP(T,*,O), d)); }
+  //template<typename O> vec<T>& operator*=(O d){ return unaryOpAssign(std::bind2nd(OP(T,*,O), d)); }
+  //template<typename O> auto operator/(O d) const{ return unaryOp(std::bind2nd(OP(T,/,O), d)); }
+  //template<typename O> vec<T>& operator/=(O d){ return unaryOpAssign(std::bind2nd(OP(T,/,O), d)); }
 
   // Vector negation
   vec<T> operator-() const{ return unaryOp(std::function<T(T)>(std::negate<T>())); }

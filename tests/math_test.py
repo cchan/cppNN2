@@ -15,6 +15,12 @@ class MainTest(unittest.TestCase):
         self.assertEqual(a + b, c)
     def test_vectorSubtractNegate(self):
         self.assertEqual(b - c, - a)
+    def test_vectorOperatorEquals(self):
+        x = cppNN.vec([4,9,0])
+        x += a
+        self.assertEqual(x, cppNN.vec([5,11,3]))
+        x -= b
+        self.assertEqual(x, cppNN.vec([1,6,-3]))
     def test_dot(self):
         self.assertEqual(a.dot(b), 32)
         self.assertEqual(b.dot(c), 109)
